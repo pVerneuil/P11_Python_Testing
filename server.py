@@ -1,15 +1,19 @@
 import json
+from pathlib import Path
+
 from flask import Flask,render_template,request,redirect,flash,url_for
 
-
+current_path = Path(__file__).absolute().parent
+PATH_CLUBS = current_path / "data/clubs.json"
+PATH_COMPETITIONS = current_path / "data/competitions.json"
 def loadClubs():
-    with open('clubs.json') as c:
+    with open(PATH_CLUBS) as c:
          listOfClubs = json.load(c)['clubs']
          return listOfClubs
 
 
 def loadCompetitions():
-    with open('competitions.json') as comps:
+    with open(PATH_COMPETITIONS) as comps:
          listOfCompetitions = json.load(comps)['competitions']
          return listOfCompetitions
 
@@ -26,8 +30,13 @@ def index():
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
-    return render_template('welcome.html',club=club,competitions=competitions)
+    try :
+        club = [club for club in clubs if club['email'] == request.form['email']][0]
+        return render_template('welcome.html',club=club,competitions=competitions)
+    except IndexError:
+        return render_template('index.html', message="Email does not match any accounts") 
+    except:
+        return render_template('index.html', message="Something went wrong...")
 
 
 @app.route('/book/<competition>/<club>')
