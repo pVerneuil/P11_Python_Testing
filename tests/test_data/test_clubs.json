@@ -12,5 +12,13 @@
     {   "name":"She Lifts",
         "email": "kate@shelifts.co.uk",
         "points":"12"
+    },
+    {   "name":"has no points",
+        "email": "nopoints@broke.com",
+        "points":"0"
+    },
+    {   "name":"has a lot of points",
+        "email": "lotsOfpoints@rich.com",
+        "points":"10000"
     }
 ]}
