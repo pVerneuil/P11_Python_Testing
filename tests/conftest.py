@@ -23,9 +23,12 @@ def testing_data(mocker):
                                                 PATH_COMPETITIONS_TESTS)
     competitions = server.loadCompetitions()
     clubs = server.loadClubs()
+    reserved_places = {competition['name']:{club['name']:0 for club in clubs} for competition in competitions }
+    
 
     competitions_test = mocker.patch.object(server, "competitions", competitions)
     clubs_test = mocker.patch.object(server, "clubs", clubs)
+    reserved_places = mocker.patch.object(server, "reserved_places", reserved_places)
 
     data = {
         "competitions": competitions_test,
