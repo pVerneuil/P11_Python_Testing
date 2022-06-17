@@ -23,6 +23,7 @@ class TestPurshase:
     def test_club_points_should_be_deducted_after_redeemed(self, client,testing_data):
         """
         test issue#2 : club's points should be updated after a purchase
+        test issue#6: Point updates are not reflected 
         """
         club = testing_data['clubs'][4] 
         competition = testing_data['competitions'][0]
