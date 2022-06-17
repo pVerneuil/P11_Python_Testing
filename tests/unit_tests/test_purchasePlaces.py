@@ -13,11 +13,11 @@ class TestPurshase:
             'competition': competition['name'],
             'places':number_of_place_club_try_to_redeem
             })
-        message = f"You do not have enough points to perfom this action ( you have {club['points']} point(s))"
+        expected_message = f"You do not have enough points to perfom this action ( you have {club['points']} point(s))"
         # print(response.data.decode())
         
         assert response.status_code == 400
-        assert message in response.data.decode('UTF-8')
+        assert expected_message in response.data.decode('UTF-8')
 
 
     def test_club_points_should_be_deducted_after_redeemed(self, client,testing_data):
@@ -92,10 +92,10 @@ class TestPurshase:
             'competition': competition['name'],
             'places':number_of_place_club_try_to_redeem
             })
-        message ='You can not book more than 12 places per competition' 
+        expected_message ='You can not book more than 12 places per competition' 
         
         assert response.status_code == 400
-        assert message in response.data.decode('UTF-8')
+        assert expected_message in response.data.decode('UTF-8')
 
     def test_club_should_not_be_able_to_book_more_than_12_place_per_competition_in_multiple_time(self,client,testing_data):
         """
@@ -124,7 +124,26 @@ class TestPurshase:
             'competition': competition['name'],
             'places':number_of_place_club_try_to_redeem
             })
-        message ='You can not book more than 12 places per competition' 
+        expected_message ='You can not book more than 12 places per competition' 
         
         assert response2.status_code == 400
-        assert message in response2.data.decode('UTF-8')
+        assert expected_message in response2.data.decode('UTF-8')
+
+
+    def test_shoul_not_be_able_to_book_past_competitions(self, client, testing_data):
+        """
+        test issue #5 :Booking places in past competitions
+        """
+        club =  testing_data['clubs'][0]
+        competition = testing_data['competitions'][4] #this competition is in the past (1900)
+        number_of_place_club_try_to_redeem = 1
+        
+        response = client.post(
+            '/purchasePlaces', data={
+            'club' : club['name'] , 
+            'competition': competition['name'],
+            'places':number_of_place_club_try_to_redeem
+            })
+        expected_message = 'This competition already took place. You can not book place for it. '
+        assert response.status_code == 400
+        assert expected_message in response.data.decode('UTF-8')
