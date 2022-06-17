@@ -103,7 +103,9 @@ def purchasePlaces():
             return render_template('booking.html',club=club,competition=competition, message=message), 400
 
 
-# TODO: Add route for points display
+@app.route('/pointsBoard', methods=['GET'])
+def pointsBoard():
+        return render_template('board_points.html', clubs=clubs)
 
 
 @app.route('/logout')
