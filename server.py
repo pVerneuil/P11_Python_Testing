@@ -8,6 +8,7 @@ from flask import Flask,render_template,request,redirect,flash,url_for
 current_path = Path(__file__).absolute().parent
 PATH_CLUBS = current_path / "data/clubs.json"
 PATH_COMPETITIONS = current_path / "data/competitions.json"
+POINTS_PER_PLACE = 3
 
 def loadClubs():
     with open(PATH_CLUBS) as c:
@@ -88,12 +89,12 @@ def purchasePlaces():
     else:
         if placesRequired<=12 and placesRequired+reserved_places[competition['name']][club['name']]<= 12 :
             
-            if int(club['points'])<placesRequired:
-                message = f"You do not have enough points to perfom this action ( you have {club['points']} point(s))"
+            if int(club['points']) < (placesRequired*POINTS_PER_PLACE):
+                message = f"You do not have enough points to perfom this action ( you have {club['points']} point(s), each place cost {POINTS_PER_PLACE})."
                 return render_template('booking.html',club=club,competition=competition, message=message), 400
             else :
                 competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-                club['points'] = int(club['points'])-placesRequired
+                club['points'] = int(club['points']) - (placesRequired*POINTS_PER_PLACE)
                 reserved_places[competition['name']][club['name']] += placesRequired
                 flash('Great-booking complete!')
                 return render_template('welcome.html', club=club, competitions=competitions)
