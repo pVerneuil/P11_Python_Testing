@@ -1,3 +1,7 @@
+
+from P11_Python_Testing.server import POINTS_PER_PLACE
+
+
 class TestPurshase:
     
     def test_should_return_error_message_when_club_try_to_redeem_more_points_than_available(self, client, testing_data ):
@@ -13,7 +17,7 @@ class TestPurshase:
             'competition': competition['name'],
             'places':number_of_place_club_try_to_redeem
             })
-        expected_message = f"You do not have enough points to perfom this action ( you have {club['points']} point(s))"
+        expected_message = f"You do not have enough points to perfom this action ( you have {club['points']} point(s), each place cost {POINTS_PER_PLACE})."
         # print(response.data.decode())
         
         assert response.status_code == 400
@@ -30,7 +34,7 @@ class TestPurshase:
         number_of_place_club_try_to_redeem = 10
         
         expected_values ={
-            'number_of_club_points_updated' : int(club['points'])- number_of_place_club_try_to_redeem
+            'number_of_club_points_updated' : int(club['points'])- (number_of_place_club_try_to_redeem* POINTS_PER_PLACE)
         }
         response = client.post(
             '/purchasePlaces', data={
@@ -46,7 +50,7 @@ class TestPurshase:
         """
         test issue#4 : club's should not be able to book more than 12 places per competitons
         """
-        club = testing_data['clubs'][2] 
+        club = testing_data['clubs'][4] 
         competition = testing_data['competitions'][2]
         number_of_place_club_try_to_redeem = 12
         expected_values ={
@@ -66,7 +70,7 @@ class TestPurshase:
         """
         test issue#4 : club's should not be able to book more than 12 places per competitons
         """
-        club = testing_data['clubs'][2] 
+        club = testing_data['clubs'][4] 
         competition = testing_data['competitions'][2]
         number_of_place_club_try_to_redeem = 12
         
@@ -102,7 +106,7 @@ class TestPurshase:
         """
         test issue#4 : club's should not be able to book more than 12 places per competitons
         """
-        club = testing_data['clubs'][0] 
+        club = testing_data['clubs'][4] 
         competition = testing_data['competitions'][1]
         number_of_place_club_try_to_redeem = 6
         
@@ -115,7 +119,7 @@ class TestPurshase:
         
         assert response1.status_code == 200
         
-        club = testing_data['clubs'][0] 
+        club = testing_data['clubs'][4] 
         competition = testing_data['competitions'][1]
         number_of_place_club_try_to_redeem = 7
         
