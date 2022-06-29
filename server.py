@@ -83,6 +83,7 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
+
     if competition['is_over']: 
         flash('This competition already took place. You can not book place for it. ')
         return render_template('welcome.html', club=club, competitions=competitions),400
@@ -93,11 +94,14 @@ def purchasePlaces():
                 message = f"You do not have enough points to perfom this action ( you have {club['points']} point(s), each place cost {POINTS_PER_PLACE})."
                 return render_template('booking.html',club=club,competition=competition, message=message), 400
             else :
-                competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-                club['points'] = int(club['points']) - (placesRequired*POINTS_PER_PLACE)
-                reserved_places[competition['name']][club['name']] += placesRequired
-                flash('Great-booking complete!')
-                return render_template('welcome.html', club=club, competitions=competitions)
+              if  int(competition['numberOfPlaces'])-placesRequired >= 0: 
+                  competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+                  club['points'] = int(club['points'])-placesRequired
+                  flash('Great-booking complete!')
+                  return render_template('welcome.html', club=club, competitions=competitions)
+              else :
+                  message = f"There is not enough available in this competition ({competition['numberOfPlaces']} places left)"
+                  return render_template('booking.html',club=club,competition=competition, message=message), 400
             
         else : 
             message ='You can not book more than 12 places per competition' 
