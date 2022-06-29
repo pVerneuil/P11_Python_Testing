@@ -96,7 +96,8 @@ def purchasePlaces():
             else :
               if  int(competition['numberOfPlaces'])-placesRequired >= 0: 
                   competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-                  club['points'] = int(club['points'])-placesRequired
+                  club['points'] = int(club['points']) - (placesRequired*POINTS_PER_PLACE)
+                  reserved_places[competition['name']][club['name']] += placesRequired
                   flash('Great-booking complete!')
                   return render_template('welcome.html', club=club, competitions=competitions)
               else :
