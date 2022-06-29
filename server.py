@@ -60,10 +60,14 @@ def purchasePlaces():
         message = f"You do not have enough points to perfom this action ( you have {club['points']} point(s))"
         return render_template('booking.html',club=club,competition=competition, message=message), 400
     else :
-        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-        club['points'] = int(club['points'])-placesRequired
-        flash('Great-booking complete!')
-        return render_template('welcome.html', club=club, competitions=competitions)
+        if  int(competition['numberOfPlaces'])-placesRequired >= 0: 
+            competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+            club['points'] = int(club['points'])-placesRequired
+            flash('Great-booking complete!')
+            return render_template('welcome.html', club=club, competitions=competitions)
+        else :
+            message = f"There is not enough available in this competition ({competition['numberOfPlaces']} places left)"
+            return render_template('booking.html',club=club,competition=competition, message=message), 400
 
 
 # TODO: Add route for points display
