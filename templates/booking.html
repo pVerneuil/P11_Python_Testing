@@ -6,6 +6,7 @@
 </head>
 <body>
     <h2>{{competition['name']}}</h2>
+    {%if is_over==false%}
     Places available: {{competition['numberOfPlaces']}}
     <form action="/purchasePlaces" method="post">
         <input type="hidden" name="club" value="{{club['name']}}">
@@ -13,6 +14,7 @@
         <label for="places">How many places?</label><input type="number" name="places" id=""/>
         <button type="submit">Book</button>
     </form>
+    {%endif%}
     {{message}}
 </body>
 </html>
